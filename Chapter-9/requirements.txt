@@ -1,0 +1,2 @@
+opentelemetry-exporter-otlp-proto-http
+opentelemetry-exporter-gcp-trace
