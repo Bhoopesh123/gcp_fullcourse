@@ -24,12 +24,9 @@
 
 # 3. Some Misc Commands for Troubleshooting
 
-# 1. Login to gcloud CLI
-gcloud auth login
+    gcloud auth login 
 
-# 2. Login to Application Default Credentials (needed by ADK / Google SDKs) 
-
-    gcloud auth application-default login
+    gcloud auth application-default login 
 
     gcloud projects add-iam-policy-binding scalkit \
     --member="serviceAccount:scalkit.svc.id.goog[default/default]" \
