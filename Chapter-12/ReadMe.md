@@ -32,12 +32,12 @@ Annotate the Kubernetes service account:
 
 Ensure Workload Identity Federation is enabled for your GKE cluster and node pool. For GKE Autopilot, it is enabled by default.
 
-# 3. Grant read-only access to the GCS bucket 
+# 3. Grant read-only access to the GCS bucket  
 
-gcloud storage buckets add-iam-policy-binding \
-  gs://gcs-bhoopesh-demo \
-  --member="serviceAccount:gcs-reader@$PROJECT_ID.iam.gserviceaccount.com" \
-  --role="roles/storage.objectViewer"
+    gcloud storage buckets add-iam-policy-binding \
+    gs://gcs-bhoopesh-demo \
+    --member="serviceAccount:gcs-reader@$PROJECT_ID.iam.gserviceaccount.com" \
+    --role="roles/storage.objectViewer"
 
 roles/storage.objectViewer allows reading objects and listing objects. If you require access only to this specific file, use a bucket IAM condition or an object-level IAM policy where supported.  
 
