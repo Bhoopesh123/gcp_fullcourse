@@ -39,3 +39,6 @@
     
     ROLE: roles/aiplatform.user
     MEMBERS: serviceAccount:scalkit.svc.id.goog[default/default]
+
+    gcloud container clusters delete first-autopilot-cluster \
+ --region us-central1
