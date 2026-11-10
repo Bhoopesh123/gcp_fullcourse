@@ -1,0 +1,163 @@
+{
+  "version": 21,
+  "variables": [],
+  "tiles": {
+    "1": {
+      "type": "markdown",
+      "content": "# GCP Agent Online Evaluation — Executive Dashboard\n\nProject: `scalkit` · Region: `us-east1` · Online evaluator: `7464434907389886464` · All quality scores are percentages · Management pass target: **80%**."
+    },
+    "2": {
+      "type": "data",
+      "title": "Trajectory quality (%)",
+      "query": "fetch logs | filter gcp.project.id == \"scalkit\" and isNotNull(evaluation.result_id) and evaluation.source_name == \"multi_turn_trajectory_quality_v1\" | dedup evaluation.result_id | summarize quality_percent = avg(toDouble(evaluation.score)) * 100",
+      "visualization": "singleValue",
+      "visualizationSettings": {},
+      "querySettings": {},
+      "timeframe": { "tileTimeframeEnabled": true, "tileTimeframe": { "from": "now()-24h", "to": "now()" } }
+    },
+    "3": {
+      "type": "data",
+      "title": "Task success (%)",
+      "query": "fetch logs | filter gcp.project.id == \"scalkit\" and isNotNull(evaluation.result_id) and evaluation.source_name == \"multi_turn_task_success_v1\" | dedup evaluation.result_id | summarize success_percent = avg(toDouble(evaluation.score)) * 100",
+      "visualization": "singleValue",
+      "visualizationSettings": {},
+      "querySettings": {},
+      "timeframe": { "tileTimeframeEnabled": true, "tileTimeframe": { "from": "now()-24h", "to": "now()" } }
+    },
+    "4": {
+      "type": "data",
+      "title": "Tool-use quality (%)",
+      "query": "fetch logs | filter gcp.project.id == \"scalkit\" and isNotNull(evaluation.result_id) and evaluation.source_name == \"multi_turn_tool_use_quality_v1\" | dedup evaluation.result_id | summarize quality_percent = avg(toDouble(evaluation.score)) * 100",
+      "visualization": "singleValue",
+      "visualizationSettings": {},
+      "querySettings": {},
+      "timeframe": { "tileTimeframeEnabled": true, "tileTimeframe": { "from": "now()-24h", "to": "now()" } }
+    },
+    "5": {
+      "type": "data",
+      "title": "Quality trends (%)",
+      "query": "fetch logs | filter gcp.project.id == \"scalkit\" and isNotNull(evaluation.result_id) | dedup evaluation.result_id | makeTimeseries average_score = avg(toDouble(evaluation.score)), by:{evaluation.source_name}, interval:10m | fieldsAdd quality_percent = average_score * 100 | fieldsRemove average_score",
+      "visualization": "lineChart",
+      "visualizationSettings": {},
+      "querySettings": {},
+      "timeframe": { "tileTimeframeEnabled": true, "tileTimeframe": { "from": "now()-24h", "to": "now()" } }
+    },
+    "6": {
+      "type": "data",
+      "title": "Recent metric results",
+      "query": "fetch logs | filter gcp.project.id == \"scalkit\" and isNotNull(evaluation.result_id) | dedup evaluation.result_id | fields timestamp, evaluation.conversation_id, evaluation.source_name, score_percent=toDouble(evaluation.score) * 100, evaluation.agent_resource | sort timestamp desc | limit 100",
+      "visualization": "table",
+      "visualizationSettings": {},
+      "querySettings": {},
+      "timeframe": { "tileTimeframeEnabled": true, "tileTimeframe": { "from": "now()-24h", "to": "now()" } }
+    },
+    "7": {
+      "type": "data",
+      "title": "Overall quality (%)",
+      "query": "fetch logs | filter gcp.project.id == \"scalkit\" and isNotNull(evaluation.result_id) | dedup evaluation.result_id | summarize overall_quality_percent = avg(toDouble(evaluation.score)) * 100",
+      "visualization": "singleValue",
+      "visualizationSettings": {},
+      "querySettings": {},
+      "timeframe": { "tileTimeframeEnabled": true, "tileTimeframe": { "from": "now()-24h", "to": "now()" } }
+    },
+    "8": {
+      "type": "data",
+      "title": "Pass rate ≥80%",
+      "query": "fetch logs | filter gcp.project.id == \"scalkit\" and isNotNull(evaluation.result_id) | dedup evaluation.result_id | summarize total=count(), passing=countIf(toDouble(evaluation.score) >= 0.8) | fields pass_rate_percent = 100.0 * passing / total",
+      "visualization": "singleValue",
+      "visualizationSettings": {},
+      "querySettings": {},
+      "timeframe": { "tileTimeframeEnabled": true, "tileTimeframe": { "from": "now()-24h", "to": "now()" } }
+    },
+    "9": {
+      "type": "data",
+      "title": "Evaluation results",
+      "query": "fetch logs | filter gcp.project.id == \"scalkit\" and isNotNull(evaluation.result_id) | dedup evaluation.result_id | summarize evaluation_results = count()",
+      "visualization": "singleValue",
+      "visualizationSettings": {},
+      "querySettings": {},
+      "timeframe": { "tileTimeframeEnabled": true, "tileTimeframe": { "from": "now()-24h", "to": "now()" } }
+    },
+    "10": {
+      "type": "data",
+      "title": "Conversations evaluated",
+      "query": "fetch logs | filter gcp.project.id == \"scalkit\" and isNotNull(evaluation.result_id) | dedup evaluation.result_id | summarize conversations_evaluated = countDistinct(evaluation.conversation_id)",
+      "visualization": "singleValue",
+      "visualizationSettings": {},
+      "querySettings": {},
+      "timeframe": { "tileTimeframeEnabled": true, "tileTimeframe": { "from": "now()-24h", "to": "now()" } }
+    },
+    "11": {
+      "type": "data",
+      "title": "Below target (<80%)",
+      "query": "fetch logs | filter gcp.project.id == \"scalkit\" and isNotNull(evaluation.result_id) and toDouble(evaluation.score) < 0.8 | dedup evaluation.result_id | summarize below_target_results = count()",
+      "visualization": "singleValue",
+      "visualizationSettings": {},
+      "querySettings": {},
+      "timeframe": { "tileTimeframeEnabled": true, "tileTimeframe": { "from": "now()-24h", "to": "now()" } }
+    },
+    "12": {
+      "type": "data",
+      "title": "Quality comparison by metric (%)",
+      "query": "fetch logs | filter gcp.project.id == \"scalkit\" and isNotNull(evaluation.result_id) | dedup evaluation.result_id | summarize quality_percent=avg(toDouble(evaluation.score))*100, by:{evaluation.source_name} | sort quality_percent desc",
+      "visualization": "categoricalBarChart",
+      "visualizationSettings": {},
+      "querySettings": {},
+      "timeframe": { "tileTimeframeEnabled": true, "tileTimeframe": { "from": "now()-24h", "to": "now()" } }
+    },
+    "13": {
+      "type": "data",
+      "title": "Evaluation mix",
+      "query": "fetch logs | filter gcp.project.id == \"scalkit\" and isNotNull(evaluation.result_id) | dedup evaluation.result_id | summarize results=count(), by:{evaluation.source_name}",
+      "visualization": "donutChart",
+      "visualizationSettings": {},
+      "querySettings": {},
+      "timeframe": { "tileTimeframeEnabled": true, "tileTimeframe": { "from": "now()-24h", "to": "now()" } }
+    },
+    "14": {
+      "type": "data",
+      "title": "Target attainment",
+      "query": "fetch logs | filter gcp.project.id == \"scalkit\" and isNotNull(evaluation.result_id) | dedup evaluation.result_id | fieldsAdd target_status=if(toDouble(evaluation.score)>=0.8,\"Meets target\",else:\"Below target\") | summarize results=count(), by:{target_status}",
+      "visualization": "pieChart",
+      "visualizationSettings": {},
+      "querySettings": {},
+      "timeframe": { "tileTimeframeEnabled": true, "tileTimeframe": { "from": "now()-24h", "to": "now()" } }
+    },
+    "15": {
+      "type": "data",
+      "title": "Score distribution",
+      "query": "fetch logs | filter gcp.project.id == \"scalkit\" and isNotNull(evaluation.result_id) | dedup evaluation.result_id | fieldsAdd score_band=if(toDouble(evaluation.score)>=0.8,\"80–100%\",else:if(toDouble(evaluation.score)>=0.5,\"50–79%\",else:\"Below 50%\")) | summarize results=count(), by:{score_band}",
+      "visualization": "categoricalBarChart",
+      "visualizationSettings": {},
+      "querySettings": {},
+      "timeframe": { "tileTimeframeEnabled": true, "tileTimeframe": { "from": "now()-24h", "to": "now()" } }
+    },
+    "16": {
+      "type": "data",
+      "title": "Evaluation volume over time",
+      "query": "fetch logs | filter gcp.project.id == \"scalkit\" and isNotNull(evaluation.result_id) | dedup evaluation.result_id | makeTimeseries evaluation_results=count(), interval:10m",
+      "visualization": "barChart",
+      "visualizationSettings": {},
+      "querySettings": {},
+      "timeframe": { "tileTimeframeEnabled": true, "tileTimeframe": { "from": "now()-24h", "to": "now()" } }
+    }
+  },
+  "layouts": {
+    "1": { "x": 0, "y": 0, "w": 24, "h": 2 },
+    "2": { "x": 0, "y": 2, "w": 8, "h": 5 },
+    "3": { "x": 8, "y": 2, "w": 8, "h": 5 },
+    "4": { "x": 16, "y": 2, "w": 8, "h": 5 },
+    "7": { "x": 0, "y": 7, "w": 5, "h": 5 },
+    "8": { "x": 5, "y": 7, "w": 5, "h": 5 },
+    "9": { "x": 10, "y": 7, "w": 5, "h": 5 },
+    "10": { "x": 15, "y": 7, "w": 5, "h": 5 },
+    "11": { "x": 20, "y": 7, "w": 4, "h": 5 },
+    "5": { "x": 0, "y": 12, "w": 16, "h": 8 },
+    "14": { "x": 16, "y": 12, "w": 8, "h": 8 },
+    "12": { "x": 0, "y": 20, "w": 12, "h": 8 },
+    "13": { "x": 12, "y": 20, "w": 6, "h": 8 },
+    "15": { "x": 18, "y": 20, "w": 6, "h": 8 },
+    "16": { "x": 0, "y": 28, "w": 12, "h": 8 },
+    "6": { "x": 12, "y": 28, "w": 12, "h": 8 }
+  }
+}
