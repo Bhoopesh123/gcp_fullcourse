@@ -1,0 +1,64 @@
+2026-11-04 12:23:02.289 Uvicorn server started on 127.0.0.1:8501
+
+  You can now view your Streamlit app in your browser.
+
+  URL: http://127.0.0.1:8501
+
+  Detected WSL. Using poll-based file watching for better compatibility. To force watchdog, set server.fileWatcherType = "watchdog".
+2026-11-04 12:24:39.576 Uvicorn server started on 127.0.0.1:8501
+
+  You can now view your Streamlit app in your browser.
+
+  URL: http://127.0.0.1:8501
+
+  Detected WSL. Using poll-based file watching for better compatibility. To force watchdog, set server.fileWatcherType = "watchdog".
+🔭 OpenTelemetry Tracing Details 🔭
+|  Phoenix Project: test-eval
+|  Span Processor: BatchSpanProcessor
+|  Collector Endpoint: 127.0.0.1:4319
+|  Transport: gRPC
+|  Transport Headers: {'authorization': '****'}
+|  
+|  Using a default SpanProcessor. `add_span_processor` will overwrite this default.
+|  
+|  `register` has set this TracerProvider as the global OpenTelemetry default.
+|  To disable this behavior, call `register` with `set_global_tracer_provider=False`.
+
+  Stopping...
+  Stopping...
+2026-11-04 12:38:29.147 Uvicorn server started on 127.0.0.1:8501
+
+  You can now view your Streamlit app in your browser.
+
+  URL: http://127.0.0.1:8501
+
+  Detected WSL. Using poll-based file watching for better compatibility. To force watchdog, set server.fileWatcherType = "watchdog".
+  Stopping...
+  Stopping...
+2026-11-04 12:44:03.994 Uvicorn server started on 127.0.0.1:8501
+
+  You can now view your Streamlit app in your browser.
+
+  URL: http://127.0.0.1:8501
+
+  Detected WSL. Using poll-based file watching for better compatibility. To force watchdog, set server.fileWatcherType = "watchdog".
+🔭 OpenTelemetry Tracing Details 🔭
+|  Phoenix Project: test-eval
+|  Span Processor: BatchSpanProcessor
+|  Collector Endpoint: 127.0.0.1:4319
+|  Transport: gRPC
+|  Transport Headers: {'authorization': '****'}
+|  
+|  Using a default SpanProcessor. `add_span_processor` will overwrite this default.
+|  
+|  `register` has set this TracerProvider as the global OpenTelemetry default.
+|  To disable this behavior, call `register` with `set_global_tracer_provider=False`.
+
+  Stopping...
+2026-11-04 13:12:13.692 Uvicorn server started on 127.0.0.1:8501
+
+  You can now view your Streamlit app in your browser.
+
+  URL: http://127.0.0.1:8501
+
+  Detected WSL. Using poll-based file watching for better compatibility. To force watchdog, set server.fileWatcherType = "watchdog".

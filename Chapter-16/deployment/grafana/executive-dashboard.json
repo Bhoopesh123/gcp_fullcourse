@@ -1,0 +1,225 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": "ai-evaluation-executive",
+    "title": "AI Evaluation Executive Dashboard",
+    "tags": ["ai", "evaluation", "phoenix", "executive"],
+    "timezone": "browser",
+    "schemaVersion": 41,
+    "version": 1,
+    "refresh": "20s",
+    "time": {"from": "now-24h", "to": "now"},
+    "templating": {"list": []},
+    "annotations": {"list": []},
+    "panels": [
+      {
+        "id": 1,
+        "type": "stat",
+        "title": "Evaluations",
+        "datasource": {"type": "loki", "uid": "grafanacloud-logs"},
+        "gridPos": {"x": 0, "y": 0, "w": 4, "h": 5},
+        "targets": [{"refId": "A", "expr": "sum(count_over_time({job=\"phoenix-evaluations\"}[$__range]))", "queryType": "instant", "editorMode": "code"}],
+        "fieldConfig": {"defaults": {"unit": "short", "color": {"mode": "thresholds"}}, "overrides": []},
+        "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "orientation": "auto", "textMode": "auto", "colorMode": "value", "graphMode": "area", "justifyMode": "auto"}
+      },
+      {
+        "id": 2,
+        "type": "stat",
+        "title": "Correctness Pass Rate",
+        "datasource": {"type": "loki", "uid": "grafanacloud-logs"},
+        "gridPos": {"x": 4, "y": 0, "w": 4, "h": 5},
+        "targets": [{"refId": "A", "expr": "100 * sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_correctness_label=\"correct\" [$__range])) / sum(count_over_time({job=\"phoenix-evaluations\"}[$__range]))", "queryType": "instant", "editorMode": "code"}],
+        "fieldConfig": {"defaults": {"unit": "percent", "min": 0, "max": 100, "thresholds": {"mode": "absolute", "steps": [{"color": "red", "value": null}, {"color": "yellow", "value": 80}, {"color": "green", "value": 95}]}}, "overrides": []},
+        "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "background", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "textMode": "auto"}
+      },
+      {
+        "id": 3,
+        "type": "stat",
+        "title": "Factual / No Hallucination",
+        "datasource": {"type": "loki", "uid": "grafanacloud-logs"},
+        "gridPos": {"x": 8, "y": 0, "w": 4, "h": 5},
+        "targets": [{"refId": "A", "expr": "100 * sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_hallucination_label=\"factual\" [$__range])) / sum(count_over_time({job=\"phoenix-evaluations\"}[$__range]))", "queryType": "instant", "editorMode": "code"}],
+        "fieldConfig": {"defaults": {"unit": "percent", "min": 0, "max": 100, "thresholds": {"mode": "absolute", "steps": [{"color": "red", "value": null}, {"color": "yellow", "value": 80}, {"color": "green", "value": 95}]}}, "overrides": []},
+        "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "background", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "textMode": "auto"}
+      },
+      {
+        "id": 4,
+        "type": "stat",
+        "title": "Relevance Pass Rate",
+        "datasource": {"type": "loki", "uid": "grafanacloud-logs"},
+        "gridPos": {"x": 12, "y": 0, "w": 4, "h": 5},
+        "targets": [{"refId": "A", "expr": "100 * sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_relevance_label=\"relevant\" [$__range])) / sum(count_over_time({job=\"phoenix-evaluations\"}[$__range]))", "queryType": "instant", "editorMode": "code"}],
+        "fieldConfig": {"defaults": {"unit": "percent", "min": 0, "max": 100, "thresholds": {"mode": "absolute", "steps": [{"color": "red", "value": null}, {"color": "yellow", "value": 80}, {"color": "green", "value": 95}]}}, "overrides": []},
+        "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "background", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "textMode": "auto"}
+      },
+      {
+        "id": 5,
+        "type": "stat",
+        "title": "Clarity Pass Rate",
+        "datasource": {"type": "loki", "uid": "grafanacloud-logs"},
+        "gridPos": {"x": 16, "y": 0, "w": 4, "h": 5},
+        "targets": [{"refId": "A", "expr": "100 * sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_response_clarity_label=\"clear\" [$__range])) / sum(count_over_time({job=\"phoenix-evaluations\"}[$__range]))", "queryType": "instant", "editorMode": "code"}],
+        "fieldConfig": {"defaults": {"unit": "percent", "min": 0, "max": 100, "thresholds": {"mode": "absolute", "steps": [{"color": "red", "value": null}, {"color": "yellow", "value": 80}, {"color": "green", "value": 95}]}}, "overrides": []},
+        "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "background", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "textMode": "auto"}
+      },
+      {
+        "id": 6,
+        "type": "stat",
+        "title": "Safety Pass Rate",
+        "datasource": {"type": "loki", "uid": "grafanacloud-logs"},
+        "gridPos": {"x": 20, "y": 0, "w": 4, "h": 5},
+        "targets": [{"refId": "A", "expr": "100 * sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_response_safety_label=\"safe\" [$__range])) / sum(count_over_time({job=\"phoenix-evaluations\"}[$__range]))", "queryType": "instant", "editorMode": "code"}],
+        "fieldConfig": {"defaults": {"unit": "percent", "min": 0, "max": 100, "thresholds": {"mode": "absolute", "steps": [{"color": "red", "value": null}, {"color": "yellow", "value": 80}, {"color": "green", "value": 95}]}}, "overrides": []},
+        "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "background", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "textMode": "auto"}
+      },
+      {
+        "id": 7,
+        "type": "stat",
+        "title": "Task Completion Rate",
+        "datasource": {"type": "loki", "uid": "grafanacloud-logs"},
+        "gridPos": {"x": 0, "y": 5, "w": 6, "h": 5},
+        "targets": [{"refId": "A", "expr": "100 * sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_task_completion_label=\"complete\" [$__range])) / sum(count_over_time({job=\"phoenix-evaluations\"}[$__range]))", "queryType": "instant", "editorMode": "code"}],
+        "fieldConfig": {"defaults": {"unit": "percent", "min": 0, "max": 100, "thresholds": {"mode": "absolute", "steps": [{"color": "red", "value": null}, {"color": "yellow", "value": 80}, {"color": "green", "value": 95}]}}, "overrides": []},
+        "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "background", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "textMode": "auto"}
+      },
+      {
+        "id": 8,
+        "type": "stat",
+        "title": "Hallucinated Responses",
+        "datasource": {"type": "loki", "uid": "grafanacloud-logs"},
+        "gridPos": {"x": 6, "y": 5, "w": 6, "h": 5},
+        "targets": [{"refId": "A", "expr": "sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_hallucination_label=\"hallucinated\" [$__range]))", "queryType": "instant", "editorMode": "code"}],
+        "fieldConfig": {"defaults": {"unit": "short", "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "red", "value": 1}]}}, "overrides": []},
+        "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "background", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "textMode": "auto"}
+      },
+      {
+        "id": 9,
+        "type": "stat",
+        "title": "Incorrect Responses",
+        "datasource": {"type": "loki", "uid": "grafanacloud-logs"},
+        "gridPos": {"x": 12, "y": 5, "w": 6, "h": 5},
+        "targets": [{"refId": "A", "expr": "sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_correctness_label=\"incorrect\" [$__range]))", "queryType": "instant", "editorMode": "code"}],
+        "fieldConfig": {"defaults": {"unit": "short", "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "red", "value": 1}]}}, "overrides": []},
+        "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "background", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "textMode": "auto"}
+      },
+      {
+        "id": 10,
+        "type": "stat",
+        "title": "Incomplete Responses",
+        "datasource": {"type": "loki", "uid": "grafanacloud-logs"},
+        "gridPos": {"x": 18, "y": 5, "w": 6, "h": 5},
+        "targets": [{"refId": "A", "expr": "sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_task_completion_label=\"incomplete\" [$__range]))", "queryType": "instant", "editorMode": "code"}],
+        "fieldConfig": {"defaults": {"unit": "short", "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "red", "value": 1}]}}, "overrides": []},
+        "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "background", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "textMode": "auto"}
+      },
+      {
+        "id": 11,
+        "type": "timeseries",
+        "title": "Evaluation Quality Trend",
+        "datasource": {"type": "loki", "uid": "grafanacloud-logs"},
+        "gridPos": {"x": 0, "y": 10, "w": 24, "h": 9},
+        "targets": [
+          {"refId": "A", "legendFormat": "Correct", "expr": "100 * sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_correctness_label=\"correct\" [$__interval])) / sum(count_over_time({job=\"phoenix-evaluations\"}[$__interval]))", "queryType": "range", "editorMode": "code"},
+          {"refId": "B", "legendFormat": "Factual", "expr": "100 * sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_hallucination_label=\"factual\" [$__interval])) / sum(count_over_time({job=\"phoenix-evaluations\"}[$__interval]))", "queryType": "range", "editorMode": "code"},
+          {"refId": "C", "legendFormat": "Relevant", "expr": "100 * sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_relevance_label=\"relevant\" [$__interval])) / sum(count_over_time({job=\"phoenix-evaluations\"}[$__interval]))", "queryType": "range", "editorMode": "code"},
+          {"refId": "D", "legendFormat": "Safe", "expr": "100 * sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_response_safety_label=\"safe\" [$__interval])) / sum(count_over_time({job=\"phoenix-evaluations\"}[$__interval]))", "queryType": "range", "editorMode": "code"},
+          {"refId": "E", "legendFormat": "Complete", "expr": "100 * sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_task_completion_label=\"complete\" [$__interval])) / sum(count_over_time({job=\"phoenix-evaluations\"}[$__interval]))", "queryType": "range", "editorMode": "code"}
+        ],
+        "fieldConfig": {"defaults": {"unit": "percent", "min": 0, "max": 100, "custom": {"drawStyle": "line", "lineInterpolation": "smooth", "lineWidth": 2, "fillOpacity": 10, "showPoints": "never"}}, "overrides": []},
+        "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}}
+      },
+      {
+        "id": 12,
+        "type": "logs",
+        "title": "Recent Evaluation Details",
+        "datasource": {"type": "loki", "uid": "grafanacloud-logs"},
+        "gridPos": {"x": 0, "y": 19, "w": 24, "h": 10},
+        "targets": [{"refId": "A", "expr": "{job=\"phoenix-evaluations\"} | json", "queryType": "range", "editorMode": "code"}],
+        "options": {"showTime": true, "showLabels": false, "showCommonLabels": false, "wrapLogMessage": true, "prettifyLogMessage": true, "enableLogDetails": true, "sortOrder": "Descending", "dedupStrategy": "none"}
+      },
+      {
+        "id": 13,
+        "type": "stat",
+        "title": "Overall Quality Index",
+        "description": "Executive composite of correctness, factuality, relevance, clarity, safety, and completion.",
+        "datasource": {"type": "loki", "uid": "grafanacloud-logs"},
+        "gridPos": {"x": 0, "y": 29, "w": 6, "h": 6},
+        "targets": [{"refId": "A", "expr": "100 * (sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_correctness_label=\"correct\" [$__range])) + sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_hallucination_label=\"factual\" [$__range])) + sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_relevance_label=\"relevant\" [$__range])) + sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_response_clarity_label=\"clear\" [$__range])) + sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_response_safety_label=\"safe\" [$__range])) + sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_task_completion_label=\"complete\" [$__range]))) / (6 * sum(count_over_time({job=\"phoenix-evaluations\"}[$__range])))", "queryType": "instant", "editorMode": "code"}],
+        "fieldConfig": {"defaults": {"unit": "percent", "min": 0, "max": 100, "thresholds": {"mode": "absolute", "steps": [{"color": "red", "value": null}, {"color": "yellow", "value": 80}, {"color": "green", "value": 95}]}}, "overrides": []},
+        "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "background", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "textMode": "auto"}
+      },
+      {
+        "id": 14,
+        "type": "stat",
+        "title": "Quality Risk Signals",
+        "description": "Total incorrect, hallucinated, irrelevant, unclear, unsafe, and incomplete signals; a response may contribute more than one.",
+        "datasource": {"type": "loki", "uid": "grafanacloud-logs"},
+        "gridPos": {"x": 6, "y": 29, "w": 6, "h": 6},
+        "targets": [{"refId": "A", "expr": "sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_correctness_label=\"incorrect\" [$__range])) + sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_hallucination_label=\"hallucinated\" [$__range])) + sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_relevance_label=\"irrelevant\" [$__range])) + sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_response_clarity_label=\"unclear\" [$__range])) + sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_response_safety_label=\"unsafe\" [$__range])) + sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_task_completion_label=\"incomplete\" [$__range]))", "queryType": "instant", "editorMode": "code"}],
+        "fieldConfig": {"defaults": {"unit": "short", "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "yellow", "value": 1}, {"color": "red", "value": 5}]}}, "overrides": []},
+        "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "background", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "textMode": "auto"}
+      },
+      {
+        "id": 15,
+        "type": "stat",
+        "title": "Evaluation Throughput (1h)",
+        "datasource": {"type": "loki", "uid": "grafanacloud-logs"},
+        "gridPos": {"x": 12, "y": 29, "w": 6, "h": 6},
+        "targets": [{"refId": "A", "expr": "sum(count_over_time({job=\"phoenix-evaluations\"}[1h]))", "queryType": "instant", "editorMode": "code"}],
+        "fieldConfig": {"defaults": {"unit": "short", "color": {"mode": "continuous-GrYlRd"}}, "overrides": []},
+        "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "value", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "textMode": "auto"}
+      },
+      {
+        "id": 16,
+        "type": "stat",
+        "title": "Hallucination Risk Rate",
+        "datasource": {"type": "loki", "uid": "grafanacloud-logs"},
+        "gridPos": {"x": 18, "y": 29, "w": 6, "h": 6},
+        "targets": [{"refId": "A", "expr": "100 * sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_hallucination_label=\"hallucinated\" [$__range])) / sum(count_over_time({job=\"phoenix-evaluations\"}[$__range]))", "queryType": "instant", "editorMode": "code"}],
+        "fieldConfig": {"defaults": {"unit": "percent", "min": 0, "max": 100, "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "yellow", "value": 5}, {"color": "red", "value": 15}]}}, "overrides": []},
+        "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "background", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "textMode": "auto"}
+      },
+      {
+        "id": 17,
+        "type": "bargauge",
+        "title": "Management Risk Scorecard",
+        "datasource": {"type": "loki", "uid": "grafanacloud-logs"},
+        "gridPos": {"x": 0, "y": 35, "w": 12, "h": 9},
+        "targets": [
+          {"refId": "A", "legendFormat": "Incorrect", "expr": "sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_correctness_label=\"incorrect\" [$__range]))", "queryType": "instant", "editorMode": "code"},
+          {"refId": "B", "legendFormat": "Hallucinated", "expr": "sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_hallucination_label=\"hallucinated\" [$__range]))", "queryType": "instant", "editorMode": "code"},
+          {"refId": "C", "legendFormat": "Irrelevant", "expr": "sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_relevance_label=\"irrelevant\" [$__range]))", "queryType": "instant", "editorMode": "code"},
+          {"refId": "D", "legendFormat": "Unsafe", "expr": "sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_response_safety_label=\"unsafe\" [$__range]))", "queryType": "instant", "editorMode": "code"},
+          {"refId": "E", "legendFormat": "Incomplete", "expr": "sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_task_completion_label=\"incomplete\" [$__range]))", "queryType": "instant", "editorMode": "code"}
+        ],
+        "fieldConfig": {"defaults": {"unit": "short", "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "yellow", "value": 1}, {"color": "red", "value": 5}]}}, "overrides": []},
+        "options": {"displayMode": "gradient", "orientation": "horizontal", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "showUnfilled": true, "valueMode": "color"}
+      },
+      {
+        "id": 18,
+        "type": "timeseries",
+        "title": "Hallucination and Incorrect-Response Trend",
+        "datasource": {"type": "loki", "uid": "grafanacloud-logs"},
+        "gridPos": {"x": 12, "y": 35, "w": 12, "h": 9},
+        "targets": [
+          {"refId": "A", "legendFormat": "Hallucinated", "expr": "sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_hallucination_label=\"hallucinated\" [$__interval]))", "queryType": "range", "editorMode": "code"},
+          {"refId": "B", "legendFormat": "Incorrect", "expr": "sum(count_over_time({job=\"phoenix-evaluations\"} | json | evaluation_correctness_label=\"incorrect\" [$__interval]))", "queryType": "range", "editorMode": "code"}
+        ],
+        "fieldConfig": {"defaults": {"unit": "short", "color": {"mode": "palette-classic"}, "custom": {"drawStyle": "bars", "lineWidth": 1, "fillOpacity": 35, "showPoints": "never", "stacking": {"mode": "normal", "group": "A"}}}, "overrides": []},
+        "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}}
+      },
+      {
+        "id": 19,
+        "type": "logs",
+        "title": "Responses Requiring Management Attention",
+        "datasource": {"type": "loki", "uid": "grafanacloud-logs"},
+        "gridPos": {"x": 0, "y": 44, "w": 24, "h": 10},
+        "targets": [{"refId": "A", "expr": "{job=\"phoenix-evaluations\"} | json | evaluation_hallucination_label=\"hallucinated\"", "queryType": "range", "editorMode": "code"}],
+        "options": {"showTime": true, "showLabels": false, "showCommonLabels": false, "wrapLogMessage": true, "prettifyLogMessage": true, "enableLogDetails": true, "sortOrder": "Descending", "dedupStrategy": "none"}
+      }
+    ]
+  },
+  "folderUid": "ai-evaluation-observability",
+  "overwrite": true,
+  "message": "Provision AI evaluation executive dashboard"
+}

@@ -1,0 +1,4 @@
+arize-phoenix-client
+httpx
+openai
+python-dotenv

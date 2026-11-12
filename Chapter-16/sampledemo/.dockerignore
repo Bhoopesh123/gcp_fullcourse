@@ -1,0 +1,14 @@
+.env
+.git
+.venv
+__pycache__
+*.log
+*.pid
+.phoenix-data
+path
+.agents
+.codex
+deployment/gcp/kubernetes.yaml
+deployment/gcp/README.md
+deployment/gcp/monitor/*.yaml
+deployment/gcp/monitor/README.md

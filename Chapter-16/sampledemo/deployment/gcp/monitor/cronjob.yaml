@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sampledemo
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: phoenix-monitor-config
+  namespace: sampledemo
+data:
+  PHOENIX_PROJECT: test-eval
+  PHOENIX_API_URL: http://136.80.194.201:6006
+  JUDGE_MODEL: gpt-4o-mini
+  JUDGE_SAMPLE_PERCENT: "50"
+  BATCH_SIZE: "25"
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: phoenix-online-monitor
+  namespace: sampledemo
+spec:
+  # Kubernetes CronJobs have one-minute precision. Each job runs at 0, 20,
+  # and 40 seconds to provide three evaluation cycles per minute.
+  schedule: "* * * * *"
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 20
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 180
+      ttlSecondsAfterFinished: 600
+      template:
+        metadata:
+          labels:
+            app: phoenix-online-monitor
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: monitor
+              image: gcr.io/scalkit/sampledemo-phoenix-monitor:20261112-2
+              imagePullPolicy: IfNotPresent
+              command: ["/bin/sh", "-c"]
+              args:
+                - |
+                  for delay in 0 20 20; do
+                    sleep "$delay"
+                    python phoenix_online_monitor.py \
+                      --once \
+                      --project "$PHOENIX_PROJECT" \
+                      --phoenix-url "$PHOENIX_API_URL" \
+                      --batch-size "$BATCH_SIZE" \
+                      --judge-model "$JUDGE_MODEL" \
+                      --sample-percent "$JUDGE_SAMPLE_PERCENT"
+                  done
+              envFrom:
+                - configMapRef:
+                    name: phoenix-monitor-config
+                - secretRef:
+                    name: phoenix-monitor-secrets
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 256Mi
+                limits:
+                  cpu: "1"
+                  memory: 512Mi
